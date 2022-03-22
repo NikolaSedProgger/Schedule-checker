@@ -1,5 +1,10 @@
+from email.mime import message
 import openpyxl
 import datetime
+import telebot
+from telebot import types
+
+bot = telebot.TeleBot("5121978271:AAFNK4Pz9Of5-u6Bv0OZfXy2eQktjjs-aag")
 
 excel_file = openpyxl.load_workbook('lessons.xlsx')
 shedule = {}
@@ -22,9 +27,6 @@ def create_shedule():
         shedule.update({class_:lessons})
     return shedule
 
-def time_in_range(start, end, current):
-    return start <= current <= end
-
 def get_class_lesson(shedule, class_, current_time):
     for lesson in shedule[class_]:
         start = shedule[class_][lesson]['start']
@@ -37,12 +39,21 @@ def get_class_lesson(shedule, class_, current_time):
         elif lesson == None:
             return f"У класса {class_} нет сейчас уроков"
 
-current = datetime.time(14, 40, 0) #Условно поставил время, потому что сейчас 23:50 и смысла сравниать нету
-class_ = "Класс1"
+def time_in_range(start, end, current):
+    return start <= current <= end
+
+@bot.message_handler(content_types=['text'])
+def send_class_lesson(message):
+    if message.text == "/start":
+        classes = types.ReplyKeyboardMarkup(resize_keyboard=True)
+        for class_ in shedule:
+            classes.add(class_)
+        bot.send_message(message.from_user.id, "Выберите класс: ", reply_markup=classes)
+    else:
+        bot.send_message(message.from_user.id, get_class_lesson(shedule, message.text, current))
+
+current = datetime.datetime.now().time()
 shedule = create_shedule()
-print(get_class_lesson(shedule, class_ ,current))
 
-
-
-
+bot.polling()
 
