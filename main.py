@@ -20,7 +20,7 @@ def create_shedule():
                 end_minutes = int(time[11:])
             except TypeError:
                 None
-            lessons.update({lesson: {"start": [start_hours, start_minutes], "end": [end_hours, end_minutes]}})
+            lessons.update({lesson: {'start': [start_hours, start_minutes], 'end': [end_hours, end_minutes]}})
         shedule.update({class_: lessons})
     return shedule
 
@@ -49,7 +49,10 @@ def send_class_lesson(message):
             classes.add(class_)
         bot.send_message(message.from_user.id, "Выберите класс: ", reply_markup=classes)
     else:
-        bot.send_message(message.from_user.id, get_class_lesson(shedule, message.text, current))
+        try:
+            bot.send_message(message.from_user.id, get_class_lesson(shedule, message.text, current))
+        except KeyError:
+            bot.send_message(message.from_user.id, "Такого класса нету в расписании")
 
 if __name__ == "__main__":
     excel_file = openpyxl.load_workbook('lessons.xlsx')
