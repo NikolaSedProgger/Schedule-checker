@@ -46,11 +46,12 @@ def send_class_lesson(message):
     if message.text == "/start":
         classes = types.ReplyKeyboardMarkup(resize_keyboard=True)
         for class_ in shedule:
-            classes.add(class_)
+            classes.add(class_) #Мог сделать через callback, но кода было бы в разы больше. 
         bot.send_message(message.from_user.id, "Выберите класс: ", reply_markup=classes)
     else:
         try:
-            bot.send_message(message.from_user.id, get_class_lesson(shedule, message.text, current))
+            lesson = get_class_lesson(shedule, message.text, current)
+            bot.send_message(message.from_user.id, f"У класса {message.text} сейчас {lesson}")
         except KeyError:
             bot.send_message(message.from_user.id, "Такого класса нету в расписании")
 
