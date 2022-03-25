@@ -49,11 +49,12 @@ def send_class_lesson(message):
             classes.add(class_) #Мог сделать через callback, но кода было бы в разы больше. 
         bot.send_message(message.from_user.id, "Выберите класс: ", reply_markup=classes)
     else:
+        nokb = types.ReplyKeyboardRemove()
         try:
             lesson = get_class_lesson(shedule, message.text, current)
-            bot.send_message(message.from_user.id, f"У класса {message.text} сейчас {lesson}")
+            bot.send_message(message.from_user.id, f"У класса {message.text} сейчас {lesson}", reply_markup=nokb)
         except KeyError:
-            bot.send_message(message.from_user.id, "Такого класса нету в расписании")
+            bot.send_message(message.from_user.id, "Такого класса нету в расписании", reply_markup=nokb)
 
 if __name__ == "__main__":
     excel_file = openpyxl.load_workbook('shedule.xlsx')
