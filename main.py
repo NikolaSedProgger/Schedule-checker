@@ -56,7 +56,7 @@ def send_class_lesson(message):
             bot.send_message(message.from_user.id, "Такого класса нету в расписании")
 
 if __name__ == "__main__":
-    excel_file = openpyxl.load_workbook('lessons.xlsx')
+    excel_file = openpyxl.load_workbook('shedule.xlsx')
     shedule = {}
     current = datetime.datetime.now().time()
     shedule = create_shedule()
